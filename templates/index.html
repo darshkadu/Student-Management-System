@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#174a70">
+    <title>Student register | Classroom Register</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <script src="{{ url_for('static', filename='app.js') }}" defer></script>
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside class="sidebar" aria-label="Main navigation">
+        <a class="brand" href="/" aria-label="Classroom Register home">
+          <span class="brand-name">classroom register<span> STUDENT RECORDS</span></span>
+        </a>
+
+        <div class="side-label">SCHOOL OFFICE</div>
+        <nav>
+          <a class="nav-link active" href="/" aria-current="page">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5.5h16M4 12h16M4 18.5h16"/><circle cx="7" cy="5.5" r="1"/><circle cx="7" cy="12" r="1"/><circle cx="7" cy="18.5" r="1"/></svg>
+            Student register
+            <span class="nav-count" id="nav-count">0</span>
+          </a>
+        </nav>
+
+        <div class="sidebar-bottom">
+          <div class="term-label">CLASS RECORDS</div>
+          <div class="term-name">Student register</div>
+          <div class="term-note">Saved locally · SQLite</div>
+          <div class="sidebar-rule"></div>
+          <div class="profile">
+            <span class="profile-avatar">SO</span>
+            <span><strong>School office</strong><small>Student records</small></span>
+            <span class="profile-dots" aria-hidden="true">···</span>
+          </div>
+        </div>
+      </aside>
+
+      <main class="main-content">
+        <header class="topline">
+          <div class="breadcrumb">SCHOOL <span>/</span> STUDENTS</div>
+          <div class="today" id="today"></div>
+        </header>
+
+        <section class="page-heading">
+          <div>
+            <p class="eyebrow">CLASS REGISTER</p>
+            <h1>Student register<span class="heading-period">.</span></h1>
+            <p class="heading-copy">Keep the class list and marks in one easy-to-find place.</p>
+          </div>
+          <button class="button button-primary" id="add-student" type="button">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+            Add student
+          </button>
+        </section>
+
+        <section class="stats-row" aria-label="Student record summary">
+          <div class="stat-block">
+            <span class="stat-label">STUDENTS IN CLASS</span>
+            <strong class="stat-value" id="total-students">0</strong>
+            <span class="stat-foot">in the register</span>
+          </div>
+          <div class="stat-block">
+            <span class="stat-label">CLASS AVERAGE</span>
+            <strong class="stat-value" id="average-marks">—<small>%</small></strong>
+            <span class="stat-foot">across all students</span>
+          </div>
+          <div class="stat-block stat-block-accent">
+            <span class="stat-label">HIGHEST MARK</span>
+            <strong class="stat-value" id="top-score">—<small>%</small></strong>
+            <span class="stat-foot" id="top-student">no marks recorded</span>
+          </div>
+        </section>
+
+        <section class="directory" aria-labelledby="directory-title">
+          <div class="directory-header">
+            <div>
+              <h2 id="directory-title">Class list</h2>
+              <p id="result-count">Loading records…</p>
+            </div>
+            <label class="search-box">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 4.5 4.5"/></svg>
+              <span class="visually-hidden">Search students</span>
+              <input id="search" type="search" placeholder="Find a name, roll no. or class" autocomplete="off">
+              <kbd>/</kbd>
+            </label>
+            <div class="list-tools" aria-label="Class list options">
+              <label class="tool-select-label" for="class-filter">Class</label>
+              <select class="tool-select" id="class-filter" aria-label="Filter by class">
+                <option value="">All classes</option>
+              </select>
+              <label class="tool-select-label" for="sort-order">Sort</label>
+              <select class="tool-select" id="sort-order" aria-label="Sort students">
+                <option value="name-asc">Name A–Z</option>
+                <option value="name-desc">Name Z–A</option>
+                <option value="marks-desc">Marks highest</option>
+                <option value="marks-asc">Marks lowest</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th scope="col">STUDENT</th>
+                  <th scope="col">ROLL NO.</th>
+                  <th scope="col">CLASS</th>
+                  <th scope="col">MARKS</th>
+                  <th scope="col">CONTACT</th>
+                  <th scope="col" aria-label="Actions"></th>
+                </tr>
+              </thead>
+              <tbody id="student-rows"></tbody>
+            </table>
+            <div class="empty-state" id="empty-state" hidden>
+              <span class="empty-mark">01</span>
+              <h3>Your class list is empty</h3>
+              <p id="empty-copy">Add a student and their details will appear here.</p>
+              <button class="button button-secondary" id="empty-add" type="button">Add a student</button>
+            </div>
+          </div>
+        </section>
+
+        <footer class="page-footer">
+          <span>CLASSROOM REGISTER <span class="footer-dot">/</span> MINI PROJECT</span>
+          <span id="footer-status">Connected to local records</span>
+        </footer>
+      </main>
+    </div>
+
+    <dialog class="student-dialog" id="student-dialog" aria-labelledby="dialog-title">
+      <form id="student-form">
+        <div class="dialog-topline">
+          <span class="eyebrow" id="dialog-eyebrow">NEW STUDENT</span>
+          <button class="icon-button close-dialog" type="button" aria-label="Close dialog" title="Close">×</button>
+        </div>
+        <h2 id="dialog-title">Add to the register</h2>
+        <p class="dialog-copy">Enter the details now; you can update them later.</p>
+        <div class="form-grid">
+          <label class="field field-wide">Full name
+            <input name="name" type="text" maxlength="80" placeholder="e.g. Amara Okafor" required>
+          </label>
+          <label class="field">Roll number
+            <input name="roll_no" type="text" maxlength="24" placeholder="e.g. ST-2041" required>
+          </label>
+          <label class="field">Class
+            <input name="class_name" type="text" maxlength="40" placeholder="e.g. Year 10-A" required>
+          </label>
+          <label class="field">Marks <span class="field-hint">out of 100</span>
+            <input name="marks" type="number" min="0" max="100" step="0.01" placeholder="0 – 100" required>
+          </label>
+          <label class="field">Contact number
+            <input name="contact" type="tel" maxlength="20" placeholder="e.g. +1 555 018 2200" required>
+          </label>
+        </div>
+        <p class="form-error" id="form-error" role="alert" hidden></p>
+        <div class="dialog-actions">
+          <button class="button button-secondary close-dialog" type="button">Cancel</button>
+          <button class="button button-primary" id="save-student" type="submit">Save student</button>
+        </div>
+      </form>
+    </dialog>
+
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  </body>
+</html>

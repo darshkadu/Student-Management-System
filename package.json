@@ -1,0 +1,9 @@
+{
+  "name": "classroom-register-students",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Frontend syntax checks for the Flask student management mini project",
+  "scripts": {
+    "check:frontend": "node --check static/app.js"
+  }
+}
